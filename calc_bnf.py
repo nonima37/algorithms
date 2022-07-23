@@ -28,10 +28,7 @@ def expr():
     while True:
         if look_ahead == '+':
             match('+')
-            if isinstance(look_ahead, Num):
-                result == look_ahead.value
-            else:
-                result += term()
+            result += term()
         elif look_ahead == '-':
             match('-')
             result -= term()
