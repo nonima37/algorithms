@@ -1,11 +1,6 @@
 PREC = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
 ASSOC = {'+': 'left', '-': 'left', '*': 'left', '/': 'left', '^': 'right'}
 
-def get_next_token(s):
-    tokens = s.split(' ')
-    for t in tokens:
-        yield t
-
 def compare(t1, t2):
     if t2 == '(':
         return True
@@ -15,9 +10,8 @@ def compare(t1, t2):
     else:
         return False
 
-def process(token, stack):
-    retval = ''
-
+def process(token, stack, output):
+    #retval = []
     # pushing stuff to the stack whenever 
     # lower precendence is encountered, current stack is added to the output
     if stack:
@@ -26,54 +20,56 @@ def process(token, stack):
             stack.append(token)
         elif token == ')':
             while stack[-1] != '(':
-                retval += stack.pop() + ' '
+                output.append(stack.pop())
             stack.pop()
         elif compare(token, stack[-1]):
             stack.append(token)
         else:
             while not compare(token, stack[-1]):
-                retval += stack.pop() + ' '
+                output.append(stack.pop())
                 if not stack:
                     break
             stack.append(token)
     else:
         stack.append(token)
 
-    return retval
-
-def convert(input):
+def convert(input_string):
     stack = []
-    output = ''
-    for token in get_next_token(input):
+    output = []
+    for token in input_string.split(' '):
         try:
             int(token)
         except ValueError:
-            output += process(token, stack)
+            process(token, stack, output)
         else:
-            output += token + ' '
+            output.append(token)
 
     while stack:
-        output += stack.pop() + ' '
+        output.append(stack.pop())
     return output
 
-def calc(input):
-    postfix = convert(input).replace(' ', '')
+def calc(input_string):
+    postfix = convert(input_string)
     expr = []
-
+    cur_index = len(expr) - 1
+    print(postfix)
     for i in range(len(postfix)):
         try:
             expr.append(int(postfix[i]))
         except ValueError:
             if postfix[i] == "+":
-                expr[0] += expr[1]
+                expr[len(expr)-2] += expr[len(expr)-1]
             elif postfix[i] == "-":
-                expr[0] -= expr[1]
+                expr[len(expr)-2] -= expr[len(expr)-1]
             elif postfix[i] == "*":
-                expr[0] *= expr[1]
+               expr[len(expr)-2] *= expr[len(expr)-1]
             elif postfix[i] == "/":
-                expr[0] /= expr[1]
-
-            del expr[1]
+               expr[len(expr)-2] /= expr[len(expr)-1]
+            del expr[-1]
     print(expr)
 
-calc("2 * 2 / 3")
+calc("2 - 1 * ( 8 - 2 ) / 2")
+
+
+
+
