@@ -59,8 +59,7 @@ def factor():
         result **= factor()
     return result
 
-# executes if there's a paranthesis or just returns a number
-# number return could be done in the factor() function?
+# executes if there's a parantheses or just returns a number
 def base():
     if look_ahead == '(':
         match('(')
@@ -97,6 +96,7 @@ def main(input_string):
     #match('') #?
     return result
 
+print(main(2+3*(3/2-4)))
 # each function is performing specific operations but before they do,
 # they call other functions that perform higher precendence operations,
 # and add(or whatever operationg) that result to the result variable
